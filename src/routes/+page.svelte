@@ -1,7 +1,11 @@
-<script>
-	import Counter from './Counter.svelte';
-	import welcome from '$lib/images/svelte-welcome.webp';
-	import welcome_fallback from '$lib/images/svelte-welcome.png';
+<script lang="ts">
+
+	import type { Product } from '@prisma/client';
+	import { addToCart } from '../store';
+
+	export let data: {
+		products: Product[]
+	};
 </script>
 
 <svelte:head>
@@ -10,22 +14,15 @@
 </svelte:head>
 
 <section>
-	<h1>
-		<span class="welcome">
-			<picture>
-				<source srcset={welcome} type="image/webp" />
-				<img src={welcome_fallback} alt="Welcome" />
-			</picture>
-		</span>
+	
 
-		to your new<br />SvelteKit app
-	</h1>
-
-	<h2>
-		try editing <strong>src/routes/+page.svelte</strong>
-	</h2>
-
-	<Counter />
+	{#each data.products as product}
+		<div>
+			<h3>{product.name}</h3>
+			<p>{product.price}</p>
+			<button on:click={()=>addToCart(product.id)}>Add to Cart</button>
+		</div>
+	{/each}
 </section>
 
 <style>

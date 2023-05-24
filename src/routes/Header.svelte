@@ -2,6 +2,22 @@
 	import { page } from '$app/stores';
 	import logo from '$lib/images/svelte-logo.svg';
 	import github from '$lib/images/github.svg';
+	import loggedIn from '../store/user';
+	import Cart from './Cart.svelte';
+	import { signIn, signOut } from '@auth/sveltekit/client';
+
+	const login = async () => {
+		// signIn()
+		// signin credentials
+		try {
+			await signIn('credentials', {
+				email: '',
+				password: '',
+			})
+		} catch(err) {
+			console.log(err)
+		}
+	}
 </script>
 
 <header>
@@ -25,6 +41,16 @@
 			<li aria-current={$page.url.pathname.startsWith('/sverdle') ? 'page' : undefined}>
 				<a href="/sverdle">Sverdle</a>
 			</li>
+			{#if $page.data.session?.user}
+				<Cart></Cart>
+				<div>
+					<p>Logged in as {$page.data.session.user.name}</p>
+					<button on:click={signOut}>Log Out</button>
+				</div>
+			{:else} 
+				<button on:click={login}>Log In</button>
+			{/if}
+
 		</ul>
 		<svg viewBox="0 0 2 3" aria-hidden="true">
 			<path d="M0,0 L0,3 C0.5,3 0.5,3 1,2 L2,0 Z" />
@@ -34,7 +60,7 @@
 	<div class="corner">
 		<a href="https://github.com/sveltejs/kit">
 			<img src={github} alt="GitHub" />
-		</a>
+		</a>	
 	</div>
 </header>
 
