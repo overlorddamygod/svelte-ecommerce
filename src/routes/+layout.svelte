@@ -1,10 +1,13 @@
 <script lang="ts">
+	import '../app.postcss';
 	import Header from './Header.svelte';
+	import Nav from './Nav.svelte';
 	import './styles.css';
 </script>
 
 <div class="app">
-	<Header />
+	<!-- <Header /> -->
+	<Nav />
 
 	<main>
 		<slot />

@@ -1,4 +1,13 @@
 <script lang="ts">
+	import {
+		Button,
+		P,
+		Table,
+		TableBodyCell,
+		TableBodyRow,
+		TableHead,
+		TableHeadCell
+	} from 'flowbite-svelte';
 	import cart, { removeFromCart, updateCartItemQuantity } from '../../store';
 	import type { TCartItem } from '../../types';
 
@@ -29,47 +38,35 @@
 </svelte:head>
 
 <section>
-	<table>
-		<tr>
-			<th>Product</th>
-			<th>Quantity</th>
-			<th>Unit Price</th>
-			<th>Total Price</th>
-			<th>Actions</th>
-		</tr>
+	<Table>
+		<TableHead>
+			<TableHeadCell>Product name</TableHeadCell>
+			<TableHeadCell>Quantity</TableHeadCell>
+			<TableHeadCell>Unit Price</TableHeadCell>
+			<TableHeadCell>Total Price</TableHeadCell>
+			<TableHeadCell>Actions</TableHeadCell>
+		</TableHead>
+
 		{#each $cart as cartItem}
-			<tr>
-				<td>{cartItem.product.name}</td>
-				<td>
-					<!-- <button on:click={()=>cartItem.quantity--}>-</button> -->
-					<input
+			<TableBodyRow>
+				<TableBodyCell>{cartItem.product.name}</TableBodyCell>
+				<TableBodyCell
+					><input
 						type="number"
+						class="text-black"
 						bind:value={cartItem.quantity}
 						on:input={(event) => handleQuantityChange(cartItem.id, event)}
-					/>
-					<!-- <button on:click={()=>cartItem.quantity++}>+</button> -->
-				</td>
-				<td>Rs. {cartItem.product.price}</td>
-				<td>Rs. {cartItem.quantity * cartItem.product.price}</td>
-
-				<!-- button to increase, decrease and setQuantity -->
-				<!-- <button on:click={()=>addToCart(cartItem.product.id, 1)}>+</button> -->
-
-				<td>
-					<button on:click={() => removeFromCart(cartItem.id)}>Remove</button>
-				</td>
-				<!-- <button on:click={()=>addToCart(cartItem.product.id, 0)}>Set Quantity</button> -->
-
-				<!-- <button on:click={()=>addToCart(product)}>Add to Cart</button> -->
-			</tr>
+					/></TableBodyCell
+				>
+				<TableBodyCell>Rs. {cartItem.product.price}</TableBodyCell>
+				<TableBodyCell>Rs. {cartItem.quantity * cartItem.product.price}</TableBodyCell>
+				<TableBodyCell
+					><button on:click={() => removeFromCart(cartItem.id)}>Remove</button></TableBodyCell
+				>
+			</TableBodyRow>
 		{/each}
-	</table>
+	</Table>
 
-	<div>Total: {totalPrice}</div>
+	<P>Total: {totalPrice}</P>
+	<Button>Checkout</Button>
 </section>
-
-<style>
-	table {
-		width: 100%;
-	}
-</style>
