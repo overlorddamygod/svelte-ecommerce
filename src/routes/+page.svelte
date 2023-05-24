@@ -1,10 +1,9 @@
 <script lang="ts">
-
 	import type { Product } from '@prisma/client';
 	import { addToCart } from '../store';
 
 	export let data: {
-		products: Product[]
+		products: Product[];
 	};
 </script>
 
@@ -14,13 +13,11 @@
 </svelte:head>
 
 <section>
-	
-
 	{#each data.products as product}
 		<div>
 			<h3>{product.name}</h3>
 			<p>{product.price}</p>
-			<button on:click={()=>addToCart(product.id)}>Add to Cart</button>
+			<button on:click={() => addToCart(product.id)}>Add to Cart</button>
 		</div>
 	{/each}
 </section>

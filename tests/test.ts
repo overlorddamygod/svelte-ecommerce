@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 test('logged in', async ({ page }) => {
-	// // logged in 
+	// // logged in
 	// await page.goto('http://localhost:3000/login');
 	// await page.fill('input[name="username"]', 'jsmith');
 	// await page.fill('input[name="password"]', 'password');
@@ -9,5 +9,4 @@ test('logged in', async ({ page }) => {
 	// await page.waitForNavigation();
 	// await page.goto('http://localhost:3000/cart');
 	// await page.waitForSelector('text=Cart');
-
 });

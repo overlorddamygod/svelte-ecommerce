@@ -6,13 +6,13 @@ declare global {
 		// interface Locals {}
 		// interface PageData {}
 		// interface Platform {}
-		declare module "next-auth" {
+		declare module 'next-auth' {
 			interface User {
 				id: number; // Or string
 			}
 			interface Session {
-				expires: string
-				user: User
+				expires: string;
+				user: User;
 			}
 		}
 	}

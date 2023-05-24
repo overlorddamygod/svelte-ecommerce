@@ -2,122 +2,164 @@ import prisma from '$lib';
 import { error, json } from '@sveltejs/kit';
 
 export const GET = async (req) => {
-    // console.log(await req.locals.getSession())
-    const session = await req.locals.getSession()
-    console.log(session)
-    // session?.user.
+	const session = await req.locals.getSession();
+	// eslint-disable-next-line
+	const userId = +session!.user.id;
 
-    const cartItems = await prisma.cartItem.findMany({
-        where: {
-            userId: 1
-        },
-        include: {
-            product: true
-        }
-    });
+	const cartItems = await prisma.cartItem.findMany({
+		where: {
+			userId
+		},
+		include: {
+			product: true
+		}
+	});
 
-    return json(cartItems);
+	return json(cartItems);
+};
+
+export async function POST({ request, locals }) {
+	const { id } = await request.json();
+
+	if (!id) {
+		throw error(400, 'No id provided');
+	}
+
+	const product = await prisma.product.findUnique({
+		where: {
+			id
+		}
+	});
+
+	if (!product) {
+		throw error(404, 'No product found');
+	}
+
+	const session = await locals.getSession();
+	// eslint-disable-next-line
+	const userId = +session!.user.id;
+
+	// search if the product is already in the cart
+	const cartItemExists = await prisma.cartItem.findFirst({
+		where: {
+			productId: product.id,
+			userId
+		}
+	});
+
+	if (cartItemExists) {
+		// update quantity
+		const cartItem = await prisma.cartItem.update({
+			where: {
+				id: cartItemExists.id
+			},
+			data: {
+				quantity: cartItemExists.quantity + 1
+			},
+			include: {
+				product: true
+			}
+		});
+
+		return json(cartItem, {
+			status: 201
+		});
+	}
+
+	// add product to cartitem
+	const cartItem = await prisma.cartItem.create({
+		data: {
+			product: {
+				connect: {
+					id: product.id
+				}
+			},
+			quantity: 1,
+			user: {
+				connect: {
+					id: userId
+				}
+			}
+		},
+		include: {
+			product: true
+		}
+	});
+
+	return json(cartItem, {
+		status: 201
+	});
 }
 
-export async function POST({request}) {
-    const { id } = await request.json();
+export const PUT = async ({ request, locals }) => {
+	const { id, quantity } = await request.json();
 
-    if (!id) {
-        throw error(400, 'No id provided');
-    }
+	if (!id) {
+		throw error(400, 'No id provided');
+	}
 
-    const product = await prisma.product.findUnique({
-        where: {
-            id
-        }
-    });
+	const session = await locals.getSession();
+	// eslint-disable-next-line
+	const userId = +session!.user.id;
 
-    if (!product) {
-        throw error(404, 'No product found');
-    }
+	// check if id exist
+	let cartItem = await prisma.cartItem.findFirst({
+		where: {
+			id,
+			userId
+		}
+	});
 
-    // search if the product is already in the cart
-    const cartItemExists = await prisma.cartItem.findFirst({
-        where: {
+	if (!cartItem) {
+		throw error(404, 'No cart item found');
+	}
 
-            productId: product.id,
-            userId: 1
-        }
-    });
+	cartItem = await prisma.cartItem.update({
+		where: {
+			id
+		},
+		data: {
+			quantity
+		},
+		include: {
+			product: true
+		}
+	});
 
-    if (cartItemExists) {
-        // update quantity
-        const cartItem = await prisma.cartItem.update({
-            where: {
-                id: cartItemExists.id
-            },
-            data: {
-                quantity: cartItemExists.quantity + 1
-            },
-            include: {
-                product: true
-            }
-        });
+	return json(cartItem);
+};
 
-        return json(cartItem, {
-            status: 201
-        });
-    }
+export const DELETE = async ({ request, locals }) => {
+	const { id } = await request.json();
 
-    // add product to cartitem
-    const cartItem = await prisma.cartItem.create({
-        data: {
-            product: {
-                connect: {
-                    id: product.id
-                }
-            },
-            quantity: 1,
-            user: {
-                connect: {
-                    id: 1
-                }
-            }
-        },
-        include: {
-            product: true
-        }
-    })
+	if (!id) {
+		throw error(400, 'No id provided');
+	}
 
-    return json(cartItem, {
-        status: 201
-    });
-}
+	const session = await locals.getSession();
+	// eslint-disable-next-line
+	const userId = +session!.user.id;
 
-export const PUT = async ({request}) => {
-    const { id, quantity } = await request.json();
+	// check if id exist
+	let cartItem = await prisma.cartItem.findFirst({
+		where: {
+			id,
+			userId
+		}
+	});
 
-    if (!id) {
-        throw error(400, 'No id provided');
-    }
+	if (!cartItem) {
+		throw error(404, 'No cart item found');
+	}
 
-    // check if id exist
-    let cartItem = await prisma.cartItem.findUnique({
-        where: {
-            id
-        }
-    });
+	cartItem = await prisma.cartItem.delete({
+		where: {
+			id
+		},
+		include: {
+			product: true
+		}
+	});
 
-    if (!cartItem) {
-        throw error(404, 'No cart item found');
-    }
-
-   cartItem = await prisma.cartItem.update({
-        where: {
-            id
-        },
-        data: {
-            quantity
-        },
-        include: {
-            product: true
-        }
-    });
-
-    return json(cartItem);
-}
+	return json(cartItem);
+};

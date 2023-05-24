@@ -8,5 +8,5 @@
 </script>
 
 <li>
-    <a href="/cart">Cart: {$cart.length} items</a>
+	<a href="/cart">Cart: {$cart.length} items</a>
 </li>
