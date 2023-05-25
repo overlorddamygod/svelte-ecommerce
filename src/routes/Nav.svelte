@@ -48,7 +48,9 @@
 				/></svg
 			>
 		</div>
-		<Input id="search-navbar" class="pl-10" placeholder="Search..." />
+		<form method="get" action="/search">
+			<Input id="search-navbar" class="pl-10" placeholder="Search..." name="q" />
+		</form>
 	</div>
 	{#if $page.data.session?.user}
 		<div class="flex items-center md:order-2">
