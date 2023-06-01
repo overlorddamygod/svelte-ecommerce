@@ -1,7 +1,6 @@
 <script lang="ts">
 	import '../app.postcss';
-	import Header from './Header.svelte';
-	import Nav from './Nav.svelte';
+	import Nav from '../components/Nav.svelte';
 	import './styles.css';
 </script>
 

@@ -2,6 +2,7 @@
 	import type { Product } from '@prisma/client';
 	import { addToCart } from '../store';
 	import { Badge, Button, Card, Rating } from 'flowbite-svelte';
+	import ProductCard from '../components/ProductCard.svelte';
 
 	export let data: {
 		products: Product[];
@@ -15,7 +16,8 @@
 
 <section class="grid gap-4 grid-cols-2 md:grid-cols-3">
 	{#each data.products as product}
-		<Card padding="none">
+		<ProductCard {product} {addToCart} />
+		<!-- <Card padding="none">
 			<a href="/">
 				<img
 					class="p-8 rounded-t-lg"
@@ -37,7 +39,7 @@
 					<Button on:click={() => addToCart(product.id)}>Add to Cart</Button>
 				</div>
 			</div>
-		</Card>
+		</Card> -->
 	{/each}
 </section>
 

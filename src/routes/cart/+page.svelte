@@ -10,7 +10,7 @@
 	} from 'flowbite-svelte';
 	import cart, { removeFromCart, updateCartItemQuantity } from '../../store';
 	import type { TCartItem } from '../../types';
-	import CartItem from '../CartItem.svelte';
+	import CartItem from '../../components//CartItem.svelte';
 
 	$: totalPrice = $cart.reduce((total, next) => {
 		return total + next.quantity * next.product.price;

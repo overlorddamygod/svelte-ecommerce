@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Button, Search } from 'flowbite-svelte';
-	import ProductCard from '../ProductCard.svelte';
+	import ProductCard from '../../components/ProductCard.svelte';
 	import type { Product } from '@prisma/client';
 	import { page } from '$app/stores';
 

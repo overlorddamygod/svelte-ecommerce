@@ -5,7 +5,7 @@
 	export let addToCart: (id: number) => void;
 </script>
 
-<Card padding="none">
+<Card padding="none" href="/product/{product.id}">
 	<a href="/">
 		<img
 			class="p-8 rounded-t-lg"
@@ -24,7 +24,7 @@
 		</Rating>
 		<div class="flex justify-between items-center">
 			<span class="md:text-3xl font-bold text-gray-900 dark:text-white">Rs.{product.price}</span>
-			<Button on:click={() => addToCart(product.id)}>Add to Cart</Button>
+			<!-- <Button on:click={() => addToCart(product.id)}>Add to Cart</Button> -->
 		</div>
 	</div>
 </Card>
